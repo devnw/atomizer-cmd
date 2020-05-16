@@ -2,13 +2,11 @@ github.com/Pallinder/go-randomdata v1.2.0 h1:DZ41wBchNRb/0GfsePLiSwb0PHZmT67XY00
 github.com/Pallinder/go-randomdata v1.2.0/go.mod h1:yHmJgulpD2Nfrm0cR9tI/+oAgRqCQQixsA8HyRZfV9Y=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/devnw/alog v1.0.1/go.mod h1:Aw4xF3fFZcv69DP3Ohu3OOMIJAtXZuY+tsXZusFrav8=
 github.com/devnw/alog v1.0.2-0.20200502220347-f1c5d181b272/go.mod h1:Aw4xF3fFZcv69DP3Ohu3OOMIJAtXZuY+tsXZusFrav8=
 github.com/devnw/alog v1.0.2 h1:xsp10SXX5pf7RIdRPDwq5QLfxaT9h9h43045N1fnu8Y=
 github.com/devnw/alog v1.0.2/go.mod h1:Aw4xF3fFZcv69DP3Ohu3OOMIJAtXZuY+tsXZusFrav8=
-github.com/devnw/amqp v1.0.0 h1:AUhcGGtgWPtpli0wV1tFBmMNI5fDzBilXeRXCyOJMSc=
-github.com/devnw/amqp v1.0.0/go.mod h1:Gpbdjxx1Q0uAp7YNqKae8Lzx3QVJVPbLktedZbGDkAg=
-github.com/devnw/atomizer v0.0.0-20200428025136-4c73160e6fc7/go.mod h1:nCXymI4QeHuGc9XW9HyRbG1k46YOJZCCc6ujQiQwtYU=
+github.com/devnw/amqp v1.0.3 h1:sNR8L48Dy9erAbOpw+49+5bBFaZCGJCqYOpFBPB+Mo8=
+github.com/devnw/amqp v1.0.3/go.mod h1:dBgjaMhoSzIU7AkI6vFifwpKwfYC+E1jvxqL55m2qTI=
 github.com/devnw/atomizer v1.0.0 h1:iYAsfkZLrTFIyKW3VMLqSvw6aH+jTS30bvww2ySzoVc=
 github.com/devnw/atomizer v1.0.0/go.mod h1:b0qzSJI8m1gM+OLtXE9Xa5OirdCocZiDyyI8MRBee4Y=
 github.com/devnw/validator v1.0.2 h1:AHOWd/lAfYafLdMJIkQwehiZSzhbYgyl4DrYbGrlKXI=

@@ -126,10 +126,6 @@ func Initialize() {
 
 	// Create a copy of the atomizer
 	a := atomizer.Atomize(ctx, events)
-	if a == nil {
-		fmt.Println("atomizer instance returned nil")
-		os.Exit(1)
-	}
 
 	// Execute the processing on the atomizer
 	err = a.Exec()

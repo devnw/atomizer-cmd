@@ -16,9 +16,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/devnw/alog"
-	"github.com/devnw/amqp"
-	"github.com/devnw/atomizer"
+	"atomizer.io/amqp"
+	"atomizer.io/engine"
+	"devnw.com/alog"
 	"github.com/pkg/errors"
 )
 
@@ -83,7 +83,7 @@ func Initialize() {
 		os.Exit(1)
 	}
 
-	var conductor atomizer.Conductor
+	var conductor engine.Conductor
 	var attempts int
 
 	for attempts < 5 && conductor == nil {
@@ -111,8 +111,8 @@ func Initialize() {
 	alog.Println("connection to amqp established")
 
 	// Register the conductor into the atomizer library after initializing the
-	/// connection to the message queue
-	err = atomizer.Register(conductor)
+	// connection to the message queue
+	err = engine.Register(conductor)
 	if err != nil {
 		fmt.Println("error registering amqp conductor | " + err.Error())
 		os.Exit(1)
@@ -125,12 +125,16 @@ func Initialize() {
 	alog.Printc(ctx, events)
 
 	// Create a copy of the atomizer
-	a := atomizer.Atomize(ctx, events)
+	a, err := engine.Atomize(ctx, events)
+	if err != nil {
+		fmt.Println("error while initializing atomizer.| " + err.Error())
+		os.Exit(1)
+	}
 
 	// Execute the processing on the atomizer
 	err = a.Exec()
 	if err != nil {
-		fmt.Println("error while executing atomizer | " + err.Error())
+		fmt.Println("error while executing atomizer.| " + err.Error())
 		os.Exit(1)
 	}
 

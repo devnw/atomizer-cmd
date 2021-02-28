@@ -1,10 +1,10 @@
-module github.com/devnw/cmd
+module atomizer.io/cmd
 
-go 1.14
+go 1.16
 
 require (
-	github.com/devnw/alog v1.0.2
-	github.com/devnw/amqp v1.0.3
-	github.com/devnw/atomizer v1.0.0
+	atomizer.io/amqp v1.0.4
+	atomizer.io/engine v1.0.2
+	devnw.com/alog v1.0.3
 	github.com/pkg/errors v0.9.1
 )

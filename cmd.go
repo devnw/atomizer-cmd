@@ -180,21 +180,13 @@ func flags() (conductor, queue string) {
 		"connection string used for rabbit mq",
 	)
 
-	help := flag.Bool(
-		"h",
-		false,
-		`signals to the agent to use environment 
-		variables for configurations`,
+	q := flag.String(
+		"queue",
+		"atomizer",
+		"queue is the queue for atom messages to be passed across in the message queue",
 	)
 
-	q := flag.String("queue", "atomizer", "queue is the queue for atom messages to be passed across in the message queue")
 	flag.Parse()
-
-	if *help {
-		fmt.Println("Usage Information")
-		flag.PrintDefaults()
-		os.Exit(0)
-	}
 
 	return environment(*c, *q)
 }

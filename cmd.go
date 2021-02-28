@@ -33,7 +33,7 @@ const (
 )
 
 // Initialize reads flags in from the command line and stands up the atomizer
-func Initialize() {
+func Initialize(appname string) {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
@@ -46,14 +46,14 @@ func Initialize() {
 		case <-ctx.Done():
 			return
 		case <-sigs:
-			alog.Println("Closing Atomizer Agent")
+			alog.Printf("Closing %s", appname)
 			os.Exit(1)
 		}
 	}()
 
 	err := alog.Global(
 		ctx,
-		"ATOMIZER AGENT",
+		appname,
 		alog.DEFAULTTIMEFORMAT,
 		time.UTC,
 		alog.DEFAULTBUFFER,
@@ -66,11 +66,6 @@ func Initialize() {
 
 	// Parse the command line flags or environment variables
 	cstring, queue := flags()
-
-	if err != nil {
-		fmt.Println("error while pulling environment variables | " + err.Error())
-		os.Exit(1)
-	}
 
 	u, err := url.Parse(cstring)
 	if err != nil {

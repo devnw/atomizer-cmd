@@ -38,6 +38,11 @@ func Initialize(appname string) {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
 
+	// Default empty appname
+	if appname == "" {
+		appname = "Atomizer Agent"
+	}
+
 	// Setup interrupt monitoring for the agent
 	go func() {
 		defer cancel()

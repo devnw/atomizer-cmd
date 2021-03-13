@@ -1,5 +1,7 @@
 atomizer.io/amqp v1.0.5 h1:mcKaInrWdO99MGNiaOW0KT5lURY1JPSy+joDMQ1Bis0=
 atomizer.io/amqp v1.0.5/go.mod h1:utJLm/ln9/CygYXk00ArFNF0XbHkNcQNuDBnLb3oQ8c=
+atomizer.io/amqp v1.0.6 h1:i3EmlDrUtOTqpnT8E2sL+bhaPv/UhxxS/0OxfeIfSQE=
+atomizer.io/amqp v1.0.6/go.mod h1:utJLm/ln9/CygYXk00ArFNF0XbHkNcQNuDBnLb3oQ8c=
 atomizer.io/engine v1.0.3 h1:lPF9Re2HuhjSrVmDliI2sPivtcgwFR8rIxhaazQeAk8=
 atomizer.io/engine v1.0.3/go.mod h1:IZX4SAOgqFmGhKDDHEHBZy7GW2Qzd1rk4XDHl2lDrfE=
 devnw.com/alog v1.0.6 h1:TI4kZ4ngOXeRPBJIoXclxKA9XuR9sdRDzXHEDW5bVfM=

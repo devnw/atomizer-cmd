@@ -67,7 +67,6 @@ func Initialize(appname string) error {
 		queue,
 		Retries,
 		RetryDelay,
-		ConnectionTimeout,
 	)
 	if err != nil {
 		return fmt.Errorf("error creating connection to AMQP | %s", err.Error())
@@ -115,11 +114,7 @@ func connect(
 	queue string,
 	retries int,
 	retrydelay time.Duration,
-	timeout time.Duration,
 ) (conductor engine.Conductor, err error) {
-	ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
 	var attempt int
 	tick := time.NewTicker(1)
 	defer tick.Stop()

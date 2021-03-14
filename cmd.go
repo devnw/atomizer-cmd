@@ -30,11 +30,19 @@ const (
 	// QUEUE is the queue for atom messages to be passed across in the
 	// message queue
 	queueENV string = "QUEUE"
+
+	// LOGLEVEL is the level to display logs for
+	logENV string = "LOGLEVEL"
 )
 
 var ConnectionTimeout = time.Second * 60
 var Retries int = 30
 var RetryDelay = time.Second
+
+type feed interface {
+	Events(buffer int) <-chan interface{}
+	Errors(buffer int) <-chan error
+}
 
 // Initialize reads flags in from the command line and stands up the atomizer
 func Initialize(appname string) error {
@@ -49,7 +57,7 @@ func Initialize(appname string) error {
 	}
 
 	// Parse the command line flags or environment variables
-	cstring, queue := flags()
+	cstring, queue, loglevel := flags()
 
 	u, err := url.Parse(cstring)
 	if err != nil {
@@ -72,6 +80,9 @@ func Initialize(appname string) error {
 		return fmt.Errorf("error creating connection to AMQP | %s", err.Error())
 	}
 
+	// Register the conductor feeds with the logger
+	registerFeed(ctx, conductor, loglevel, 0)
+
 	// Register the conductor into the atomizer library after initializing the
 	// connection to the message queue
 	err = engine.Register(conductor)
@@ -79,17 +90,14 @@ func Initialize(appname string) error {
 		return fmt.Errorf("error registering amqp conductor | %s", err.Error())
 	}
 
-	// setup the alog event subscription
-	events := make(chan interface{})
-	defer close(events)
-
-	alog.Printc(ctx, events)
-
 	// Create a copy of the atomizer
-	a, err := engine.Atomize(ctx, events)
+	a, err := engine.Atomize(ctx)
 	if err != nil {
 		return fmt.Errorf("error while initializing atomizer | %s", err.Error())
 	}
+
+	// Register the atomizer feeds with the logger
+	registerFeed(ctx, a, loglevel, 0)
 
 	// Execute the processing on the atomizer
 	err = a.Exec()
@@ -108,13 +116,52 @@ func Initialize(appname string) error {
 	return nil
 }
 
+func registerFeed(ctx context.Context, f feed, level string, buffer int) {
+	if f == nil || level == "" {
+		return
+	}
+
+	if level == "INFO" {
+		alog.Printc(ctx, f.Events(buffer))
+	}
+
+	alog.Errorc(ctx, convItoE(ctx, f.Errors(buffer)))
+}
+
+func convItoE(ctx context.Context, errs <-chan error) <-chan interface{} {
+	out := make(chan interface{})
+
+	go func(out chan<- interface{}) {
+		defer close(out)
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case e, ok := <-errs:
+				if !ok {
+					return
+				}
+
+				select {
+				case <-ctx.Done():
+					return
+				case out <- e:
+				}
+			}
+		}
+	}(out)
+
+	return out
+}
+
 func connect(
 	ctx context.Context,
 	cstring,
 	queue string,
 	retries int,
 	retrydelay time.Duration,
-) (conductor engine.Conductor, err error) {
+) (conductor amqp.Conductor, err error) {
 	var attempt int
 	tick := time.NewTicker(1)
 	defer tick.Stop()
@@ -215,7 +262,7 @@ func waitForHost(ctx context.Context, host *url.URL, timeout time.Duration) erro
 	}
 }
 
-func flags() (conductor, queue string) {
+func flags() (conductor, queue, log string) {
 	c := flag.String(
 		"conn",
 		"amqp://guest:guest@localhost:5672/",
@@ -228,14 +275,20 @@ func flags() (conductor, queue string) {
 		"queue is the queue for atom messages to be passed across in the message queue",
 	)
 
+	ll := flag.String(
+		"log",
+		"",
+		"log is the level at which to log (INFO|ERROR) or Default: empty string (\"\") to disable logging",
+	)
+
 	flag.Parse()
 
-	return environment(*c, *q)
+	return environment(*c, *q, *ll)
 }
 
 // environment pulls the environment variables as defined in the constants
 // section and overwrites the passed flag values
-func environment(cflag, qflag string) (c, q string) {
+func environment(cflag, qflag, llflag string) (c, q, ll string) {
 	c = os.Getenv(connectionStringENV)
 	if c == "" {
 		c = cflag
@@ -246,5 +299,10 @@ func environment(cflag, qflag string) (c, q string) {
 		q = qflag
 	}
 
-	return c, q
+	ll = os.Getenv(logENV)
+	if ll == "" {
+		ll = llflag
+	}
+
+	return c, q, ll
 }

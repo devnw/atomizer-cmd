@@ -16,10 +16,10 @@ import (
 	"syscall"
 	"time"
 
-	"atomizer.io/amqp"
-	"atomizer.io/engine"
-	"devnw.com/alog"
 	"github.com/pkg/errors"
+	"go.atomizer.io/amqp"
+	"go.atomizer.io/engine"
+	"go.devnw.com/alog"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 )
 
 var ConnectionTimeout = time.Second * 60
-var Retries int = 30
+var Retries = 30
 var RetryDelay = time.Second
 
 type feed interface {
